@@ -1,0 +1,21 @@
+databases:
+  - name: deptest
+    databaseName: deptest
+    user: deptest_render
+    region: singapore
+
+services:
+  - type: web
+    name: deptest_render
+    env: ruby
+    region: singapore
+    plan: free
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec puma -C config/puma.rb"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: deptest
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
